@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Bedrock Color Formatter — Генератор градиентов и HEX-цветов для PocketMine-MP</title>
+<meta name="description" content="Онлайн-генератор градиентов и HEX-цветов для Minecraft Bedrock Edition и PocketMine-MP. Создавайте красивые цветные тайтлы, боссбары и сообщения чата с помощью §x кодов.">
+<meta name="keywords" content="PocketMine, PocketMine-MP, PMMP, Bedrock, Minecraft Bedrock Edition, Pocket Edition, MCPE, gradient generator, color codes, HEX colors, генератор градиентов, цветовые коды, боссбар, тайтл, чат">
+<meta name="author" content="nikitabulanov">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://nikitabulanov.github.io/bedrock-color-formatter/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Bedrock Color Formatter — Генератор градиентов для PocketMine-MP">
+<meta property="og:description" content="Создавайте градиентные тексты с HEX-цветами для Minecraft Bedrock / PocketMine-MP. Копируйте готовый код прямо в config.yml или Main.php.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nikitabulanov.github.io/bedrock-color-formatter/">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Bedrock Color Formatter">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bedrock Color Formatter — Генератор градиентов для PocketMine-MP">
+<meta name="twitter:description" content="Онлайн-генератор градиентов и HEX-цветов для Minecraft Bedrock Edition и PocketMine-MP.">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Bedrock Color Formatter",
+  "description": "Онлайн-генератор градиентов и HEX-цветов для Minecraft Bedrock Edition и PocketMine-MP. Создавайте красивые цветные тайтлы, боссбары и сообщения чата.",
+  "url": "https://nikitabulanov.github.io/bedrock-color-formatter/",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "inLanguage": ["ru", "en"],
+  "keywords": "PocketMine-MP, PMMP, Bedrock, Minecraft, gradient, color codes, HEX"
+}
+</script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;
+  --text-muted:#8b949e;--accent:#58a6ff;--accent2:#f78166;
+  --green:#3fb950;--purple:#bc8cff
+}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;display:flex;flex-direction:column;line-height:1.5}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+header{text-align:center;padding:2rem 1rem 1rem;background:linear-gradient(180deg,#161b2280,transparent)}
+header h1{font-size:clamp(1.4rem,4vw,2rem);font-weight:700;background:linear-gradient(135deg,var(--accent),var(--purple),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+header p{color:var(--text-muted);margin-top:.5rem;font-size:clamp(.85rem,2.5vw,1rem);max-width:600px;margin-inline:auto}
+
+main{flex:1;max-width:720px;width:100%;margin:0 auto;padding:1rem}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.card h2{font-size:1rem;margin-bottom:.75rem;color:var(--text-muted);font-weight:600}
+
+label{display:block;font-size:.85rem;color:var(--text-muted);margin-bottom:.35rem;font-weight:500}
+input[type=text],textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.65rem .75rem;color:var(--text);font-size:1rem;font-family:inherit;transition:border-color .2s}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{resize:vertical;min-height:80px;font-family:'SF Mono',Monaco,'Cascadia Code','Fira Code',monospace;font-size:.85rem;line-height:1.6}
+
+.color-stops{display:flex;flex-direction:column;gap:.75rem}
+.color-row{display:flex;align-items:center;gap:.5rem}
+.color-row input[type=color]{width:44px;height:44px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:none;padding:2px;flex-shrink:0;-webkit-appearance:none;appearance:none}
+.color-row input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.color-row input[type=color]::-webkit-color-swatch{border:none;border-radius:5px}
+.color-row input[type=text]{flex:1;font-family:monospace}
+.color-row .btn-remove{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--accent2);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+.color-row .btn-remove:hover{background:#f7816620}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.6rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.85rem;cursor:pointer;transition:all .2s;font-family:inherit;font-weight:500;-webkit-tap-highlight-color:transparent}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);color:#0d1117;border-color:var(--accent);font-weight:600}
+.btn-primary:hover{background:#79c0ff;color:#0d1117}
+.btn-copy{background:var(--green);color:#0d1117;border-color:var(--green);font-weight:600;width:100%;padding:.75rem;font-size:.95rem}
+.btn-copy:hover{background:#56d364}
+.btn-copy.copied{background:var(--purple);border-color:var(--purple)}
+.btn-add{width:100%}
+
+.format-toggle{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem}
+.format-toggle button{flex:1;min-width:0;padding:.5rem .25rem;font-size:.8rem}
+.format-toggle button.active{border-color:var(--accent);color:var(--accent);background:#58a6ff15}
+
+.preview-box{min-height:56px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem;display:flex;align-items:center;justify-content:center;font-size:clamp(1.1rem,3.5vw,1.5rem);font-weight:700;letter-spacing:.5px;word-break:break-all;text-align:center;line-height:1.4}
+
+.output-area{position:relative}
+.output-area textarea{padding-right:3.5rem}
+
+.presets{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem}
+.preset{height:28px;flex:1;min-width:60px;border-radius:6px;border:2px solid var(--border);cursor:pointer;transition:border-color .2s,transform .15s}
+.preset:hover{border-color:var(--text-muted);transform:scale(1.05)}
+.preset.active{border-color:var(--accent)}
+
+footer{text-align:center;padding:1.5rem 1rem;color:var(--text-muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:1rem}
+footer a{color:var(--accent)}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+@media(max-width:480px){
+  main{padding:.75rem}
+  .card{padding:1rem}
+  .format-toggle{gap:.35rem}
+  .format-toggle button{font-size:.72rem;padding:.45rem .15rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Bedrock Color Formatter</h1>
+  <p>Генератор градиентов и HEX-цветов для PocketMine-MP и Minecraft Bedrock Edition</p>
+</header>
+
+<main>
+  <!-- Input -->
+  <div class="card">
+    <h2>Текст</h2>
+    <label for="inputText">Введите текст для покраски</label>
+    <input type="text" id="inputText" value="ПОКОЙ в РОСКОШИ" placeholder="Например: VIP Premium" autocomplete="off" spellcheck="false">
+  </div>
+
+  <!-- Colors -->
+  <div class="card">
+    <h2>Цвета градиента</h2>
+
+    <div class="presets" id="presets" role="listbox" aria-label="Пресеты цветов">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="color-stops" id="colorStops"></div>
+    <button class="btn btn-add" id="addColor" type="button">+ Добавить цвет</button>
+  </div>
+
+  <!-- Format -->
+  <div class="card">
+    <h2>Формат вывода</h2>
+    <div class="format-toggle" id="formatToggle" role="tablist">
+      <button class="btn active" data-format="pmmp" role="tab" aria-selected="true">PMMP §x</button>
+      <button class="btn" data-format="ampersand" role="tab" aria-selected="false">&amp;x (config)</button>
+      <button class="btn" data-format="motd" role="tab" aria-selected="false">MOTD \\u00a7</button>
+      <button class="btn" data-format="raw" role="tab" aria-selected="false">RAW hex</button>
+    </div>
+    <label>
+      <input type="checkbox" id="boldToggle"> <strong>Жирный</strong> (§l)
+    </label>
+  </div>
+
+  <!-- Preview -->
+  <div class="card">
+    <h2>Предпросмотр</h2>
+    <div class="preview-box" id="preview" aria-live="polite"></div>
+  </div>
+
+  <!-- Output -->
+  <div class="card">
+    <h2>Готовый код</h2>
+    <div class="output-area">
+      <textarea id="output" readonly rows="4" aria-label="Сгенерированный код"></textarea>
+    </div>
+    <button class="btn btn-copy" id="copyBtn" type="button">Скопировать</button>
+  </div>
+
+  <!-- SEO Content -->
+  <article class="card" style="color:var(--text-muted);font-size:.85rem;line-height:1.7">
+    <h2>Как использовать</h2>
+    <p>В <strong>Minecraft Bedrock Edition</strong> и серверах на <strong>PocketMine-MP (PMMP)</strong> поддерживаются кастомные HEX-цвета через формат <code>§x§R§R§G§G§B§B</code>. Этот инструмент автоматически генерирует градиентные цветовые коды для любого текста.</p>
+    <p style="margin-top:.5rem"><strong>Применение:</strong> тайтлы (title), боссбары (bossbar), сообщения чата (chat), таблички, названия предметов, привилегии и ранги на сервере.</p>
+    <p style="margin-top:.5rem">Просто введите текст, выберите цвета градиента и скопируйте готовый результат в ваш <code>config.yml</code>, <code>Main.php</code> или любой другой конфиг PocketMine плагина.</p>
+  </article>
+</main>
+
+<footer>
+  <p>Made for the <a href="https://github.com/pmmp/PocketMine-MP" rel="noopener">PocketMine-MP</a> community</p>
+  <p style="margin-top:.25rem"><a href="https://github.com/nikitabulanov/bedrock-color-formatter">Source on GitHub</a></p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+// --- State ---
+let colors = ['#FF6B6B','#4ECDC4'];
+let format = 'pmmp';
+let bold = false;
+
+const PRESETS = [
+  {name:'Sunset',    c:['#FF6B6B','#FFA500','#FFD93D']},
+  {name:'Ocean',     c:['#00B4D8','#0077B6','#023E8A']},
+  {name:'Neon',      c:['#FF00FF','#00FFFF']},
+  {name:'Fire',      c:['#FF0000','#FF8C00','#FFD700']},
+  {name:'Forest',    c:['#2D6A4F','#52B788','#D8F3DC']},
+  {name:'Royal',     c:['#7B2FF7','#FF2DAF']},
+  {name:'Gold',      c:['#FFD700','#FFA500','#FF6347']},
+  {name:'Ice',       c:['#E0FFFF','#87CEEB','#4169E1']},
+];
+
+// --- Helpers ---
+function hexToRgb(h){
+  h=h.replace('#','');
+  return [parseInt(h.substring(0,2),16),parseInt(h.substring(2,4),16),parseInt(h.substring(4,6),16)];
+}
+
+function rgbToHex(r,g,b){
+  return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+
+function interpolateColors(colorList,steps){
+  if(steps<=0)return[];
+  if(steps===1)return[colorList[0]];
+  const segments=colorList.length-1;
+  const result=[];
+  for(let i=0;i<steps;i++){
+    const t=i/(steps-1);
+    const seg=Math.min(Math.floor(t*segments),segments-1);
+    const localT=(t*segments)-seg;
+    const c1=hexToRgb(colorList[seg]);
+    const c2=hexToRgb(colorList[seg+1]);
+    result.push(rgbToHex(
+      Math.round(c1[0]+(c2[0]-c1[0])*localT),
+      Math.round(c1[1]+(c2[1]-c1[1])*localT),
+      Math.round(c1[2]+(c2[2]-c1[2])*localT)
+    ));
+  }
+  return result;
+}
+
+function formatColor(hex,char,fmt){
+  const h=hex.replace('#','').toUpperCase();
+  const chars=h.split('');
+  const boldCode=bold?getBoldCode(fmt):'';
+  switch(fmt){
+    case'pmmp':return'§x§'+chars.join('§')+boldCode+char;
+    case'ampersand':return'&x&'+chars.join('&')+boldCode+char;
+    case'motd':return'\\u00a7x'+'\\u00a7'+chars.join('\\u00a7')+boldCode+char;
+    case'raw':return'['+h+']'+char;
+  }
+}
+
+function getBoldCode(fmt){
+  switch(fmt){
+    case'pmmp':return'§l';
+    case'ampersand':return'&l';
+    case'motd':return'\\u00a7l';
+    case'raw':return'[BOLD]';
+  }
+}
+
+// --- Render ---
+function renderColorStops(){
+  const el=$('#colorStops');
+  el.innerHTML='';
+  colors.forEach((c,i)=>{
+    const row=document.createElement('div');
+    row.className='color-row';
+    row.innerHTML=`
+      <input type="color" value="${c}" data-idx="${i}" aria-label="Цвет ${i+1}">
+      <input type="text" value="${c.toUpperCase()}" data-idx="${i}" maxlength="7" aria-label="HEX цвет ${i+1}">
+      ${colors.length>2?`<button class="btn-remove" data-idx="${i}" type="button" aria-label="Удалить цвет ${i+1}">×</button>`:''}
+    `;
+    el.appendChild(row);
+  });
+}
+
+function renderPresets(){
+  const el=$('#presets');
+  el.innerHTML='';
+  PRESETS.forEach((p,i)=>{
+    const d=document.createElement('div');
+    d.className='preset';
+    d.setAttribute('role','option');
+    d.setAttribute('aria-label',p.name);
+    d.title=p.name;
+    d.dataset.idx=i;
+    d.style.background=`linear-gradient(135deg,${p.c.join(',')})`;
+    el.appendChild(d);
+  });
+}
+
+function generate(){
+  const text=$('#inputText').value;
+  if(!text){$('#output').value='';$('#preview').innerHTML='';return}
+
+  const chars=Array.from(text);
+  const visibleChars=chars.filter(c=>c!==' ');
+  const gradient=interpolateColors(colors,visibleChars.length||1);
+
+  let output='';
+  let previewHtml='';
+  let ci=0;
+
+  for(const ch of chars){
+    if(ch===' '){
+      output+=' ';
+      previewHtml+='<span>&nbsp;</span>';
+    }else{
+      const col=gradient[ci]||gradient[gradient.length-1];
+      output+=formatColor(col,ch,format);
+      previewHtml+=`<span style="color:${col};${bold?'font-weight:900':'font-weight:700'}">${ch.replace(/</g,'&lt;')}</span>`;
+      ci++;
+    }
+  }
+
+  $('#output').value=output;
+  $('#preview').innerHTML=previewHtml;
+}
+
+// --- Events ---
+$('#colorStops').addEventListener('input',e=>{
+  const idx=+e.target.dataset.idx;
+  if(e.target.type==='color'){
+    colors[idx]=e.target.value;
+    const textInput=e.target.parentElement.querySelector('input[type=text]');
+    if(textInput)textInput.value=e.target.value.toUpperCase();
+  }else if(e.target.type==='text'){
+    let v=e.target.value.trim();
+    if(/^#?[0-9A-Fa-f]{6}$/.test(v)){
+      if(!v.startsWith('#'))v='#'+v;
+      colors[idx]=v;
+      const colorInput=e.target.parentElement.querySelector('input[type=color]');
+      if(colorInput)colorInput.value=v;
+    }
+  }
+  generate();
+});
+
+$('#colorStops').addEventListener('click',e=>{
+  if(e.target.classList.contains('btn-remove')&&colors.length>2){
+    colors.splice(+e.target.dataset.idx,1);
+    renderColorStops();generate();
+  }
+});
+
+$('#addColor').addEventListener('click',()=>{
+  if(colors.length>=8)return;
+  const last=colors[colors.length-1];
+  const rgb=hexToRgb(last);
+  colors.push(rgbToHex((rgb[0]+50)%256,(rgb[1]+80)%256,(rgb[2]+30)%256));
+  renderColorStops();generate();
+});
+
+$('#formatToggle').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-format]');
+  if(!btn)return;
+  format=btn.dataset.format;
+  $$('#formatToggle .btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false')});
+  btn.classList.add('active');btn.setAttribute('aria-selected','true');
+  generate();
+});
+
+$('#inputText').addEventListener('input',generate);
+
+$('#boldToggle').addEventListener('change',e=>{
+  bold=e.target.checked;generate();
+});
+
+$('#copyBtn').addEventListener('click',()=>{
+  const text=$('#output').value;
+  if(!text)return;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=$('#copyBtn');
+    btn.textContent='Скопировано!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Скопировать';btn.classList.remove('copied')},1500);
+  });
+});
+
+$('#presets').addEventListener('click',e=>{
+  const el=e.target.closest('.preset');
+  if(!el)return;
+  const p=PRESETS[+el.dataset.idx];
+  colors=[...p.c];
+  $$('.preset').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  renderColorStops();generate();
+});
+
+// --- Init ---
+renderPresets();
+renderColorStops();
+generate();
+
+})();
+</script>
+</body>
+</html>
