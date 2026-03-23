@@ -42,7 +42,7 @@ Bedrock Edition (1.19.80+) supports custom HEX colors via the `§x§R§R§G§G§
 
 ## 🌐 Live Demo
 
-**[Open Bedrock Color Formatter →](https://nikitabulanov.github.io/bedrock-color-formatter/)**
+**[Open Bedrock Color Formatter →](https://w1zardz.github.io/bedrock-color-formatter/)**
 
 ## License
 
